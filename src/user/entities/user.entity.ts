@@ -8,7 +8,7 @@ import {
 } from 'typeorm';
 import type { Role } from '@common/constants/roles.constants';
 import { ROLES } from '@common/constants/roles.constants';
-import { Account } from '../../billing/entity/account.entity';
+import { Account } from '../../account/entities/account.entity';
 
 @Entity('users')
 export class User {
@@ -18,7 +18,7 @@ export class User {
   @Column({ unique: true })
   email: string;
 
-  @Column({ select: false })
+  @Column()
   password: string;
 
   @Column({ default: true })
@@ -32,7 +32,7 @@ export class User {
   })
   role: Role[];
 
-  @Column({ nullable: true, select: false })
+  @Column({ nullable: true })
   refreshToken: string;
 
   @OneToMany(() => Account, (account) => account.user)

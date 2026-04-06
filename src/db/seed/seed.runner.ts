@@ -1,5 +1,5 @@
-import { Inject, Injectable } from '@nestjs/common';
-import { SEEDS } from './seed.module';
+import {  Injectable } from '@nestjs/common';
+
 import { UsersSeed } from './seeds/01-users.seed';
 import { AccountsSeed } from './seeds/02-accounts.seed';
 import { TransactionsSeed } from './seeds/03-transactions.seed';

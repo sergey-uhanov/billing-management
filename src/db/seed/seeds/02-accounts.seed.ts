@@ -1,9 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { Seed } from '../seed.runner';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Account, Currency } from '../../../billing/entity/account.entity';
+
 import { Repository } from 'typeorm';
 import { User } from '../../../user/entities/user.entity';
+import { Account, Currency } from '../../../account/entities/account.entity';
 
 @Injectable()
 export class AccountsSeed implements Seed {
@@ -15,24 +16,28 @@ export class AccountsSeed implements Seed {
   ) {}
 
   async run() {
-    const user = await this.userRepo.findOne({
-      where: { email: 'user@test.com' },
-    });
+    const users = ['user@test.com', 'admin@test.com'];
 
-    if (!user) return;
+    for (const userItem of users) {
+      const user = await this.userRepo.findOne({
+        where: { email: userItem },
+      });
 
-    const exists = await this.accountRepo.findOne({
-      where: { user: { user_id: user.user_id } },
-    });
+      if (!user) return;
 
-    if (exists) return;
+      const exists = await this.accountRepo.findOne({
+        where: { user: { user_id: user.user_id } },
+      });
 
-    await this.accountRepo.save(
-      this.accountRepo.create({
-        user,
-        balance: '1000.00',
-        currency: Currency.USD,
-      })
-    );
+      if (exists) return;
+
+      await this.accountRepo.save(
+        this.accountRepo.create({
+          user,
+          balance: '1000.00',
+          currency: Currency.USD,
+        })
+      );
+    }
   }
 }

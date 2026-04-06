@@ -2,12 +2,13 @@ import { Injectable } from '@nestjs/common';
 import { Seed } from '../seed.runner';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Account } from '../../../billing/entity/account.entity';
+
 import {
   Transaction,
   TransactionStatus,
   TransactionType,
 } from '../../../billing/entity/transaction.entity';
+import { Account } from '../../../account/entities/account.entity';
 
 @Injectable()
 export class TransactionsSeed implements Seed {

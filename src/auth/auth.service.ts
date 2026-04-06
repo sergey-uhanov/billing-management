@@ -11,12 +11,16 @@ import { User } from '../user/entities/user.entity';
 import * as argon2 from 'argon2';
 import { ROLES } from '@common/constants/roles.constants';
 import { LoginDto } from '@auth/dto/loginDto.dto';
+import type { Request, Response } from 'express';
+import { ConfigService } from '@nestjs/config';
+import { JwtPayload } from '@auth/interfaces';
 
 @Injectable()
 export class AuthService {
   constructor(
     private userService: UserService,
-    private jwtService: JwtService
+    private jwtService: JwtService,
+    private configService: ConfigService
   ) {}
 
   async register(dto: RegisterDto) {
@@ -81,5 +85,49 @@ export class AuthService {
       accessToken,
       refreshToken,
     };
+  }
+
+  async refresh(req: Request, res: Response) {
+    const token = req.cookies?.refreshToken as string;
+
+    if (!token) throw new UnauthorizedException();
+
+    const payload = this.jwtService.verify<JwtPayload>(token, {
+      secret: this.configService.get<string>('JWT_SECRET'),
+    });
+
+    const user = await this.userService.findById(+payload.sub);
+
+    if (!user) throw new UnauthorizedException();
+
+    const isValid = await argon2.verify(user.refreshToken, token);
+
+    if (!isValid) throw new UnauthorizedException();
+
+    const newTokens = await this.generateTokens(user);
+
+    const hash = await argon2.hash(newTokens.refreshToken, {
+      type: argon2.argon2id,
+      memoryCost: 2 ** 16,
+      timeCost: 3,
+      parallelism: 1,
+    });
+    await this.userService.update(user.user_id, {
+      refreshToken: hash,
+    });
+
+    res.cookie('accessToken', newTokens.accessToken, {
+      httpOnly: true,
+      sameSite: 'lax',
+      secure: true,
+    });
+
+    res.cookie('refreshToken', newTokens.refreshToken, {
+      httpOnly: true,
+      sameSite: 'lax',
+      secure: true,
+    });
+
+    return res.send({ ok: true });
   }
 }

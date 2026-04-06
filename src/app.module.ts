@@ -1,12 +1,11 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserModule } from './user/user.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AuthModule } from '@auth/auth.module';
 import { BillingModule } from './billing/billing.module';
 import { SeedModule } from './db/seed/seed.module';
+import { AccountModule } from './account/account.module';
 
 @Module({
   imports: [
@@ -30,8 +29,9 @@ import { SeedModule } from './db/seed/seed.module';
     UserModule,
     AuthModule,
     BillingModule,
+    AccountModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [],
+  providers: [],
 })
 export class AppModule {}

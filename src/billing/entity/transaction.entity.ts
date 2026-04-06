@@ -1,4 +1,3 @@
-import { Account } from './account.entity';
 import {
   Column,
   CreateDateColumn,
@@ -8,6 +7,7 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { Account } from '../../account/entities/account.entity';
 
 export enum TransactionType {
   DEPOSIT = 'DEPOSIT',

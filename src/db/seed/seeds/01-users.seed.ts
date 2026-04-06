@@ -14,8 +14,18 @@ export class UsersSeed implements Seed {
 
   async run() {
     const users = [
-      { email: 'admin@test.com', password: 'hashed', role: [ROLES.ADMIN] },
-      { email: 'user@test.com', password: 'hashed', role: [ROLES.CLIENT] },
+      {
+        email: 'admin@test.com',
+        password:
+          '$argon2id$v=19$m=65536,t=3,p=1$9ye8B7XGmjF4Py5DzkNQqQ$6P0al0QC5Rmqdg4drqYkpxQMlPwQ1vCxfki/b5hMIiw',
+        role: [ROLES.ADMIN, ROLES.CLIENT],
+      },
+      {
+        email: 'user@test.com',
+        password:
+          '$argon2id$v=19$m=65536,t=3,p=1$9ye8B7XGmjF4Py5DzkNQqQ$6P0al0QC5Rmqdg4drqYkpxQMlPwQ1vCxfki/b5hMIiw',
+        role: [ROLES.CLIENT],
+      },
     ];
 
     for (const u of users) {
