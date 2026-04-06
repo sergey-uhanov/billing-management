@@ -1,12 +1,9 @@
-import { Token } from '@prisma/client';
-
 export interface Tokens {
-    accessToken: string;
-    refreshToken: Token;
+  accessToken: string;
+  refreshToken: string;
 }
 
 export interface JwtPayload {
-    id: string;
-    email: string;
-    roles: string[];
+  sub: string;
+  roles: string[];
 }
