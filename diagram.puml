@@ -1,0 +1,46 @@
+@startuml
+
+entity User {
+  +user_id: number <<PK>>
+  --
+  email: string <<UNIQUE>>
+  password: string
+  isActive: boolean
+  role: Role[]
+  refreshToken: string
+  createdAt: Date
+  updatedAt: Date
+}
+
+entity Account {
+  +id: number <<PK>>
+  --
+  balance: decimal(18,2)
+  currency: Currency
+  user_id: number <<FK>>
+  createdAt: Date
+  updatedAt: Date
+}
+
+entity Transaction {
+  +id: number <<PK>>
+  --
+  externalId: string <<UNIQUE>>
+  from_account_id: number <<FK>>
+  to_account_id: number <<FK>>
+  amount: decimal(18,2)
+  type: TransactionType
+  status: TransactionStatus
+  createdAt: Date
+}
+
+' -------------------------
+' RELATIONS
+' -------------------------
+
+User ||--o{ Account : owns
+
+Account ||--o{ Transaction : fromAccount
+Account ||--o{ Transaction : toAccount
+
+@enduml

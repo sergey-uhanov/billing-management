@@ -5,7 +5,7 @@ import {
   Get,
   Param,
   Patch,
-  Post,
+  Post, Query,
   UseGuards,
 } from '@nestjs/common';
 import { UserService } from './user.service';
@@ -28,6 +28,7 @@ import {
   UserFailedResponseDto,
   UserResponseDto,
 } from './dto/user-response.dto';
+import { PaginationQueryDto } from './dto/pagination-query.dto';
 
 @ApiTags('User')
 @Controller('user')
@@ -57,9 +58,8 @@ export class UserController {
     status: 200,
     type: GetUsersResponseDto,
   })
-  findAll() {
-    return this.userService.findAll();
-  }
+  findAll(@Query() query: PaginationQueryDto) {
+    return this.userService.findAll(query);
 
   @Get(':id')
   @ApiOperation({ summary: 'Get user by id ' })
